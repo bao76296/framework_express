@@ -22,10 +22,11 @@ var book_Model =  mongoose.model('books', bookSchema);
 
 
 const bookList = (data) => {
-    let query ={};
+    let query = data || {};
     if(data.id){
         query._id= data.id;
     }
+   
     return book_Model.find(query).sort({changeTime : -1 }).then( result => {
         return result;
     }).catch( err => {
@@ -33,11 +34,22 @@ const bookList = (data) => {
     })
 }
 
-const bookListPart = async ({pageNo = 1, pageSize = 5}) => {
-    query = {}
+const bookListPart = async ({pageNo = 1, pageSize = 5, serch = ''}) => {
+    
+    let query = {}
+    if(serch){
+        let rex = new RegExp(serch, 'g')
+        query = {
+            $or: [
+                { bookname: rex },
+                { author: rex },
+                { publishingHouse: rex },
+                { type: rex }
+            ]
 
+        }
+    }
     let res = await bookList(query);
-    console.log();
     return book_Model.find(query)
         .sort({changeTime : -1})
         .skip((pageNo -1) * pageSize )
@@ -90,12 +102,8 @@ const bookDelete = async (data) => {
                 }
                 
                 let _res = await bookList({})
-                console.log(data.pageNo,2333)
-                
-                console.log(_res.length)
                 result.isback =  data.pageNo != (Math.ceil(_res.length/5))
                 result.pageSum = _res.length;
-                console.log(result)
                 return result  
             })
             .catch( err => {

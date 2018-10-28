@@ -50,9 +50,14 @@ const fileUpload = function (req, res, next) {
     })
   }
 
+router.use((req, res, next) => {
+  res.set('content-type', 'application/json; charset=utf-8');
+  next();
+})
 
 
 router.get('/list', book_controller.bookList);
+router.get('/listOne', book_controller.bookListOne)
 router.post('/save', fileUpload, book_controller.bookSave);
 router.get('/delete', book_controller.bookDelete);
 router.post('/update', book_controller.bookUpdate);

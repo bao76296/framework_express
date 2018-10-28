@@ -19,9 +19,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var booksRouter = require('./routes/book_router')
+var booksRouter = require('./routes/book_router');
+var adminRouter = require('./routes/admin_router');
 
 app.use('/api/' + version + '/books', booksRouter)
+app.use('/api/' + version + '/admin', adminRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
