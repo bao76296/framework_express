@@ -3,16 +3,28 @@ let getNowTime = require('../util/getNowTime');
 
 let adminScheam = new mongoose.Schema({
     user : String,
+    name : String,
     password : String,
     createTime : String
 });
 
 let admin_model = mongoose.model('admin', adminScheam);
 
-const findone = (query) => {
+const findoneName = ({user}) => {
     return admin_model.find({
-        uesr : query
+        user : user
     })
+    .then( result => {
+        return result
+    })
+    .catch (err =>{
+        return false;
+    })
+}
+
+//可与上边函数整合，由于时间问题，暂时不做整合
+const logIn = (data) => {
+    return admin_model.find(data)
     .then( result => {
         return result
     })
@@ -23,14 +35,8 @@ const findone = (query) => {
 
 
 
-
 const Save = async (data) => {
-
-    let { user } = data;
-    let res = await findone({
-        uesr : user
-    })
-    console.log(res,55555);
+    let res = await findoneName(data)
     if(res.length > 0){
         return {
             code : 201,
@@ -44,10 +50,13 @@ const Save = async (data) => {
     })
     .save()
     .then( result => {
-        console.log(666)
-        console.log(result)
-        console.log(233)
-        return result
+        return {
+            code : 200,
+            data : {
+                user : result.user,
+                _id : result._id
+            }
+        }
     })
     .catch( err => {
         console.log(err)
@@ -58,5 +67,7 @@ const Save = async (data) => {
 
 
 module.exports = {
-    Save
+    Save,
+    logIn,
+    findoneName
 }
