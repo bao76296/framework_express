@@ -1,5 +1,8 @@
 const mongoose = require('../util/mongoose');
 let getNowTime = require('../util/getNowTime');
+const bcrypt = require('bcrypt');
+const hash = require('../util/hash')
+
 
 let adminScheam = new mongoose.Schema({
     user : String,
@@ -36,6 +39,8 @@ const logIn = (data) => {
 
 
 const Save = async (data) => {
+    data.password =  hash(data.password)
+
     let res = await findoneName(data)
     if(res.length > 0){
         return {
@@ -43,7 +48,6 @@ const Save = async (data) => {
             data : '用户名以注册'
         };
     }
-
     return new admin_model({
         ...data,
         createTime : getNowTime()
