@@ -1,5 +1,7 @@
 const admon_models = require('../models/admin_models')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { cert } = require('../config')
 
 
 const admin_signIn = async (req, res, next) => {
@@ -25,13 +27,18 @@ const admin_logIn = async (req, res, next) => {
     if (flag == 'err') {
         res.render('admin', { code: 500, data: JSON.stringify('系统错误，请通知管理员') })
     } else if (flag == true) {
-        req.session.userInfo = {
+        var _payload = {
             _id: _res[0]._id,
             username: _res[0].user,
             name: _res[0].name,
             level: 7
         }
-        res.render('admin', { code: 200, data: JSON.stringify('成功') });
+
+        let _token = jwt.sign(_payload, cert)
+        // res.render('admin', { code: 200, data: JSON.stringify('成功'), token: JSON.stringify(_token) });
+        res.render('admin', { code: 200, data: JSON.stringify({
+            token : _token
+        })});
 
     } else if (flag == false) {
         res.render('admin', { code: 201, data: JSON.stringify('密码不正确') });

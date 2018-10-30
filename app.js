@@ -13,17 +13,19 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    path: '/',
-    httpOnly: true,
-    secure: false,
-    maxAge: null
-  }
-}))
+//使用token
+
+// app.use(session({
+//   secret: 'keyboard cat',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: {
+//     path: '/',
+//     httpOnly: true,
+//     secure: false,
+//     maxAge: null
+//   }
+// }))
 
 
 

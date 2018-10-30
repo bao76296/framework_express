@@ -1,18 +1,23 @@
 const user_model = require('../models/user_models')
 const URL = require('url')
 const qs = require('querystring');
-
+const jwt = require('jsonwebtoken')
+const { cert } = require('../config')
 
 const userIsLogIn = (req, res, next) => {
-    if(req.session.userInfo){
+    try{
+        if(!req.query.token) throw new Error();
+        let token = jwt.verify(req.query.token, cert);
         res.render('user', { code:200, data: JSON.stringify('验证通过')})
-    } else {
+    }catch (e){
         res.render('user', { code:201, data: JSON.stringify('验证失败，需要重新登录')})
     }
+
 }
 
 const info = async (req, res, next) => {
-    let data = await user_model.info(req.session.userInfo._id)
+    console.log(req.token)
+    let data = await user_model.info(req.token._id)
     
     res.render('user', {
         code :200,
