@@ -1,5 +1,6 @@
 const user_model = require('../models/user_models')
-
+const URL = require('url')
+const qs = require('querystring');
 
 
 const userIsLogIn = (req, res, next) => {
@@ -30,8 +31,7 @@ const exit = (req, res, next) => {
     })
 }
 const check = (req, res, next) => {
-    let auth = user_model.deatil()[req.body.auth];
-
+    let auth = user_model.deatil()[qs.parse(URL.parse(req.url).query).data];
     res.render('user', {
         code : req.session.userInfo.level > auth ? 200 : 403,
         data : JSON.stringify( req.session.userInfo.level > auth ? '可以操作' : '权限不够，不可以操作')

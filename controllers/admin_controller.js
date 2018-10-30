@@ -27,7 +27,7 @@ const admin_logIn = async (req, res, next) => {
                 _id : data[0]._id,
                 username : data[0].user,
                 name : data[0].name,
-                level : 5
+                level : 7
             } 
             res.render('admin', {code : 200, data : JSON.stringify('成功')});
         } else {
