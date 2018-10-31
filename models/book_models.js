@@ -25,8 +25,8 @@ const bookList = (data) => {
     let query = data || {};
     if(data.id){
         query._id= data.id;
+        delete query.id;
     }
-   
     return book_Model.find(query).sort({changeTime : -1 }).then( result => {
         return result;
     }).catch( err => {
@@ -72,10 +72,7 @@ const bookListPart = async ({pageNo = 1, pageSize = 5, serch = ''}) => {
 
 
 const bookSave = (data) => {
-
-    
     data.bookimg =  data.bookimg || defaultBookImgUrl;
-    
     return new book_Model({
         ...data,
         creatrTime : getNowTime(),
@@ -90,8 +87,9 @@ const bookSave = (data) => {
     })
 }
 
-const bookDelete = async (data) => {
 
+const bookDelete = async (data) => {
+    
     let res = await bookList({id : data.id })
     
     return book_Model.deleteMany({_id : data.id})
@@ -100,7 +98,6 @@ const bookDelete = async (data) => {
                 if(res[0].bookimg != defaultBookImgUrl){
                     fs.unlinkSync(PATH.resolve(__dirname, '../public' + res[0].bookimg))
                 }
-                
                 let _res = await bookList({})
                 result.isback =  data.pageNo != (Math.ceil(_res.length/5))
                 result.pageSum = _res.length;

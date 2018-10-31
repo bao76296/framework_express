@@ -16,7 +16,6 @@ const userIsLogIn = (req, res, next) => {
 }
 
 const info = async (req, res, next) => {
-    console.log(req.token)
     let data = await user_model.info(req.token._id)
     
     res.render('user', {
@@ -35,13 +34,28 @@ const exit = (req, res, next) => {
         data : JSON.stringify('退出成功')
     })
 }
-const check = (req, res, next) => {
-    let auth = user_model.deatil()[qs.parse(URL.parse(req.url).query).data];
-    res.render('user', {
-        code : req.session.userInfo.level > auth ? 200 : 403,
-        data : JSON.stringify( req.session.userInfo.level > auth ? '可以操作' : '权限不够，不可以操作')
-    })
 
+const check = (req, res, next) => {
+
+    console.log(req.query,789)
+    try {
+        let token = jwt.verify(req.query.token, cert);
+        console.log(123);
+        let auth = user_model.deatil()[qs.parse(URL.parse(req.url).query).data];
+        console.log(token, auth,66666)
+        res.render('user', {
+            code : token.level > auth ? 200 : 403,
+            data : JSON.stringify( token.level > auth ? '可以操作' : '权限不够，不可以操作')
+        })
+    } catch (e) {
+        res.render('user', {
+            code :  403,
+            data : JSON.stringify('出错了。')
+        })
+    }
+   
+    
+    
 }
 
 module.exports = {
