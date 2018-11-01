@@ -1,5 +1,7 @@
 const admon_models = require('../models/admin_models')
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const PAHT = require('path');
 const jwt = require('jsonwebtoken');
 const { cert } = require('../config')
 
@@ -31,10 +33,14 @@ const admin_logIn = async (req, res, next) => {
             _id: _res[0]._id,
             username: _res[0].user,
             name: _res[0].name,
-            level: 7
+            level: 7,
         }
 
-        let _token = jwt.sign(_payload, cert)
+        let _privateKeys = fs.readFileSync(PAHT.resolve(__dirname, '../keys/private.key'));
+        
+
+        let _token = jwt.sign(_payload, _privateKeys, { algorithm: 'RS256' })
+       
         // res.render('admin', { code: 200, data: JSON.stringify('成功'), token: JSON.stringify(_token) });
         res.render('admin', { code: 200, data: JSON.stringify({
             token : _token

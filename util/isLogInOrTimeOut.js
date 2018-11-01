@@ -1,10 +1,14 @@
-const { cert } = require('../config')
+const { _public } = require('../config')
 const jwt = require('jsonwebtoken')
 const ishas = (req, res, next) => {
-    try{
+    try{ 
         if(!req.query.token) throw new Error();
-        let token = jwt.verify(req.query.token, cert);
+        let token = jwt.verify(req.query.token, _public, { algorithm: 'RS256' });
         req.token = token;
+        let _time = +new Date() /1000  - token.iat; 
+        if(_time > 1000 * 60 * 5){
+            throw new Error();
+        }
         next();
     }catch (e){
         

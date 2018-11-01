@@ -1,13 +1,15 @@
 const user_model = require('../models/user_models')
 const URL = require('url')
 const qs = require('querystring');
+const fs = require('fs');
+const PATH = require('path')
 const jwt = require('jsonwebtoken')
-const { cert } = require('../config')
+const { _public } = require('../config')
 
 const userIsLogIn = (req, res, next) => {
     try{
         if(!req.query.token) throw new Error();
-        let token = jwt.verify(req.query.token, cert);
+        let token = jwt.verify(req.query.token, _public,  { algorithm: 'RS256' });
         res.render('user', { code:200, data: JSON.stringify('验证通过')})
     }catch (e){
         res.render('user', { code:201, data: JSON.stringify('验证失败，需要重新登录')})
@@ -40,9 +42,7 @@ const check = (req, res, next) => {
     console.log(req.query,789)
     try {
         let token = jwt.verify(req.query.token, cert);
-        console.log(123);
         let auth = user_model.deatil()[qs.parse(URL.parse(req.url).query).data];
-        console.log(token, auth,66666)
         res.render('user', {
             code : token.level > auth ? 200 : 403,
             data : JSON.stringify( token.level > auth ? '可以操作' : '权限不够，不可以操作')
