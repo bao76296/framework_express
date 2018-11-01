@@ -34,6 +34,7 @@ const admin_logIn = async (req, res, next) => {
             username: _res[0].user,
             name: _res[0].name,
             level: 7,
+            iat : +new Date()/1000
         }
 
         let _privateKeys = fs.readFileSync(PAHT.resolve(__dirname, '../keys/private.key'));
@@ -42,6 +43,7 @@ const admin_logIn = async (req, res, next) => {
         let _token = jwt.sign(_payload, _privateKeys, { algorithm: 'RS256' })
        
         // res.render('admin', { code: 200, data: JSON.stringify('成功'), token: JSON.stringify(_token) });
+        res.cookie('token', _token, {expires : new Date(+new Date() + 5 * 60 *1000), path : '/'})
         res.render('admin', { code: 200, data: JSON.stringify({
             token : _token
         })});

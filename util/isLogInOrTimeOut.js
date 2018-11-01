@@ -2,8 +2,8 @@ const { _public } = require('../config')
 const jwt = require('jsonwebtoken')
 const ishas = (req, res, next) => {
     try{ 
-        if(!req.query.token) throw new Error();
-        let token = jwt.verify(req.query.token, _public, { algorithm: 'RS256' });
+        if(!req.cookies.token) throw new Error();
+        let token = jwt.verify(req.cookies.token, _public, { algorithm: 'RS256' });
         req.token = token;
         let _time = +new Date() /1000  - token.iat; 
         if(_time > 1000 * 60 * 5){
