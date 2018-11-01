@@ -11,7 +11,7 @@ router.use((req, res, next) => {
 
 router.get('/isLogIn', user_controller.userIsLogIn);
 router.get('/info', islogInOrTimeOut.ishas, user_controller.info);
-router.get('/exit', user_controller.exit);
+// router.get('/exit', user_controller.exit);
 router.get('/check', user_controller.check)
 
 module.exports = router;

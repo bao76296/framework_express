@@ -27,13 +27,13 @@ const info = async (req, res, next) => {
     })
 }
 
-const exit = (req, res, next) => {
-    req.session.userInfo = null;
-    res.render('user', {
-        code : 200,
-        data : JSON.stringify('退出成功')
-    })
-}
+// const exit = (req, res, next) => {
+//     req.session.userInfo = null;
+//     res.render('user', {
+//         code : 200,
+//         data : JSON.stringify('退出成功')
+//     })
+// }
 
 const check = (req, res, next) => {
 
@@ -61,6 +61,6 @@ const check = (req, res, next) => {
 module.exports = {
     userIsLogIn,
     info,
-    exit,
+    // exit,
     check
 }
